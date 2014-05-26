@@ -41,7 +41,6 @@
     </build>
 
     <scm>
-        <connection>https://git.cloudbees.com/snapps/unitils.git</connection>
-        <developerConnection>scm:svn:https://svn.mycompany.com/repos/myapplication/trunk/mycomponent/</developerConnection>
+        <developerConnection>scm:git:ssh://git@git.cloudbees.com/snapps/unitils.git</developerConnection>
     </scm>
 </project>
