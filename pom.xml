@@ -47,7 +47,15 @@
     </build>
 
     <scm>
+        <url>https://git.cloudbees.com/snapps/unitils.git</url>
         <developerConnection>scm:git:ssh://git@git.cloudbees.com/snapps/unitils.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>snapps-release-repository</id>
+            <url>https://repository-snapps.forge.cloudbees.com/release/</url>
+        </repository>
+    </distributionManagement>
 </project>
