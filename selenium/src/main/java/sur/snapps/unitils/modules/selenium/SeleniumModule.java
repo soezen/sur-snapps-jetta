@@ -13,13 +13,18 @@ import org.openqa.selenium.support.PageFactory;
 import org.unitils.core.Module;
 import org.unitils.core.TestListener;
 import org.unitils.util.ReflectionUtils;
+import sur.snapps.unitils.modules.selenium.page.elements.Column;
+import sur.snapps.unitils.modules.selenium.page.elements.WebPage;
+import sur.snapps.unitils.modules.selenium.page.elements.WebTable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.unitils.util.ReflectionUtils.setFieldValue;
@@ -30,6 +35,8 @@ import static org.unitils.util.ReflectionUtils.setFieldValue;
  * Time: 15:53
  */
 public class SeleniumModule implements Module {
+
+    private static final Logger LOGGER = Logger.getLogger("SeleniumModule");
 
     private SeleniumConfiguration configuration;
     private WebDriver driver;
@@ -75,6 +82,21 @@ public class SeleniumModule implements Module {
                 PageFactory.initElements(driver, webPage);
                 createAndInjectWebPages(webPage);
                 ReflectionUtils.setFieldValue(testObject, field, webPage);
+                LOGGER.info(testObject.getClass().getSimpleName() + "." + field.getName() + " = " + webPage);
+            } else if (field.isAnnotationPresent(WebTable.class)) {
+                WebTable webTable = field.getAnnotation(WebTable.class);
+                String id = webTable.id();
+                Object table = ReflectionUtils.createInstanceOfType(Table.class, true,
+                        new Class[] { WebDriver.class, String.class},
+                        new Object[] { driver, id});
+                ReflectionUtils.setFieldValue(testObject, field, table);
+                LOGGER.info(testObject.getClass().getSimpleName() + "." + field.getName() + " = " + table);
+
+                Field columnIndicesField = ReflectionUtils.getFieldWithName(Table.class, "columns", false);
+                Map<String, Column> columnIndices = ReflectionUtils.getFieldValue(table, columnIndicesField);
+                for (Column column : webTable.columns()) {
+                    columnIndices.put(column.name(), column);
+                }
             }
         }
     }

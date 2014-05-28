@@ -14,7 +14,7 @@
     <properties>
         <junit-version>4.11</junit-version>
         <unitils-version>3.4</unitils-version>
-        <guava-version>15.0</guava-version>
+        <guava-version>17.0</guava-version>
         <selenium-version>2.41.0</selenium-version>
     </properties>
 
@@ -38,10 +38,15 @@
             </plugin>
         </plugins>
         <extensions>
+            <!--<extension>-->
+                <!--<groupId>org.apache.maven.wagon</groupId>-->
+                <!--<artifactId>wagon-webdav</artifactId>-->
+                <!--<version>1.0-beta-2</version>-->
+            <!--</extension>-->
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-webdav</artifactId>
-                <version>1.0-beta-2</version>
+                <artifactId>wagon-webdav-jackrabbit</artifactId>
+                <version>1.0-beta-7</version>
             </extension>
         </extensions>
     </build>
