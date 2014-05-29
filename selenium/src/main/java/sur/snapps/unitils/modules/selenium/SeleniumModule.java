@@ -1,8 +1,8 @@
 package sur.snapps.unitils.modules.selenium;
 
 import com.saucelabs.common.SauceOnDemandAuthentication;
-import com.saucelabs.common.SauceOnDemandSessionIdProvider;
 import com.saucelabs.junit.SauceOnDemandTestWatcher;
+import com.saucelabs.saucerest.SauceREST;
 import org.apache.commons.lang.NotImplementedException;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
@@ -103,12 +103,15 @@ public class SeleniumModule implements Module {
 
     // TODO test
     private void createAndInjectSauceTestWatcher(Object testObject) {
-        SauceOnDemandSessionIdProvider sauceTestObject = (SauceOnDemandSessionIdProvider) testObject;
-        SauceOnDemandTestWatcher watcher = new SauceOnDemandTestWatcher(sauceTestObject, configuration.sauceAuthentication());
-        Set<Field> watcherFields = ReflectionUtils.getFieldsOfType(testObject.getClass(), SauceTestWatcher.class, false);
+        Set<Field> watcherFields = ReflectionUtils.getFieldsOfType(testObject.getClass(), SauceOnDemandTestWatcher.class, false);
         if (watcherFields.size() == 1) {
-            SauceTestWatcher testWatcher = ReflectionUtils.getFieldValue(testObject, watcherFields.iterator().next());
-            testWatcher.setReportWatcher(watcher);
+            SauceOnDemandTestWatcher testWatcher = ReflectionUtils.getFieldValue(testObject, watcherFields.iterator().next());
+            SauceREST sauceRest = new SauceREST(configuration.sauceAuthentication().getUsername(), configuration.sauceAuthentication().getAccessKey());
+            try {
+                ReflectionUtils.setFieldValue(testWatcher, "sauceREST", sauceRest);
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
         }
     }
 
