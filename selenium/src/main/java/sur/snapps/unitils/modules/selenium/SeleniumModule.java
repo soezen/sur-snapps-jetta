@@ -11,9 +11,14 @@ import org.openqa.selenium.support.PageFactory;
 import org.unitils.core.Module;
 import org.unitils.core.TestListener;
 import org.unitils.util.ReflectionUtils;
-import sur.snapps.unitils.modules.selenium.page.elements.Column;
-import sur.snapps.unitils.modules.selenium.page.elements.WebPage;
-import sur.snapps.unitils.modules.selenium.page.elements.WebTable;
+import sur.snapps.jetta.modules.selenium.SeleniumConfiguration;
+import sur.snapps.jetta.modules.selenium.SeleniumWebDriverType;
+import sur.snapps.jetta.modules.selenium.annotations.SeleniumTestCase;
+import sur.snapps.jetta.modules.selenium.annotations.SeleniumWebDriver;
+import sur.snapps.jetta.modules.selenium.Table;
+import sur.snapps.jetta.modules.selenium.annotations.Column;
+import sur.snapps.jetta.modules.selenium.annotations.WebPage;
+import sur.snapps.jetta.modules.selenium.annotations.WebTable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

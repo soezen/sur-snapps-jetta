@@ -1,4 +1,4 @@
-package sur.snapps.unitils.modules.selenium;
+package sur.snapps.jetta.modules.selenium.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,10 +7,13 @@ import java.lang.annotation.Target;
 
 /**
  * User: SUR
- * Date: 4/05/14
- * Time: 16:15
+ * Date: 26/05/14
+ * Time: 18:10
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface SeleniumWebDriver {
+public @interface Column {
+    int index();
+    String name();
+    boolean optional() default false;
 }

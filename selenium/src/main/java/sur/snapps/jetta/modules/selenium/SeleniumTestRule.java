@@ -1,4 +1,4 @@
-package sur.snapps.unitils.modules.selenium;
+package sur.snapps.jetta.modules.selenium;
 
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -22,8 +22,12 @@ public class SeleniumTestRule implements TestRule {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                SeleniumAnnotations.init(target);
-                base.evaluate();
+                SeleniumModule.init(target);
+                try {
+                    base.evaluate();
+                } finally {
+                    SeleniumModule.quit();
+                }
             }
         };
     }

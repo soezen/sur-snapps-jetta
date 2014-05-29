@@ -1,4 +1,4 @@
-package sur.snapps.unitils.modules.selenium;
+package sur.snapps.jetta.modules.selenium;
 
 /**
  * User: SUR

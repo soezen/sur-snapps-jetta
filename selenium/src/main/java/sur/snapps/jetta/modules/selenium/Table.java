@@ -1,11 +1,11 @@
-package sur.snapps.unitils.modules.selenium;
+package sur.snapps.jetta.modules.selenium;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import sur.snapps.unitils.modules.selenium.page.elements.Column;
+import sur.snapps.jetta.modules.selenium.annotations.Column;
 
 import java.util.List;
 import java.util.Map;

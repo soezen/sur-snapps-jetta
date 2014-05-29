@@ -1,4 +1,4 @@
-package sur.snapps.unitils.modules.selenium.page.elements;
+package sur.snapps.jetta.modules.selenium.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

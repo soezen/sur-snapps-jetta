@@ -1,4 +1,4 @@
-package sur.snapps.unitils.modules.selenium;
+package sur.snapps.jetta.modules.selenium;
 
 import com.saucelabs.common.SauceOnDemandAuthentication;
 import org.apache.commons.lang.NotImplementedException;
@@ -8,6 +8,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.unitils.util.ReflectionUtils;
+import sur.snapps.jetta.modules.selenium.annotations.SeleniumWebDriver;
 
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
@@ -19,7 +20,7 @@ import java.util.Set;
  * Date: 29/05/14
  * Time: 16:31
  */
-public class SeleniumAnnotations {
+public class SeleniumModule {
 
     private static SeleniumConfiguration configuration;
     private static WebDriver driver;
@@ -29,6 +30,12 @@ public class SeleniumAnnotations {
     public static void init(Object target) {
         configuration = new SeleniumConfiguration();
         createAndInjectWebDriver(target);
+    }
+
+    public static void quit() {
+        if (driver != null) {
+            driver.quit();
+        }
     }
 
     private static void createAndInjectWebDriver(Object target) {
