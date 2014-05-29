@@ -7,9 +7,9 @@
     <packaging>pom</packaging>
     <version>0.0.5-SNAPSHOT</version>
     <modules>
+        <module>core</module>
         <module>database</module>
         <module>selenium</module>
-        <module>core</module>
     </modules>
 
     <properties>

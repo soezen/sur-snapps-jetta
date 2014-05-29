@@ -6,7 +6,6 @@ import com.saucelabs.common.Utils;
 import com.saucelabs.saucerest.SauceREST;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
-import sur.snapps.jetta.core.config.JettaConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +24,8 @@ public class SauceTestWatcher extends TestWatcher {
     public SauceTestWatcher(SauceOnDemandSessionIdProvider target, boolean verboseMode) {
         this.target = target;
         this.verboseMode = verboseMode;
-        activated = JettaConfiguration.sauceActivated();
+        SeleniumConfiguration configuration = new SeleniumConfiguration();
+        activated = configuration.sauceActivated();
     }
 
     private SauceREST sauceREST() {
