@@ -44,7 +44,7 @@ public class SeleniumModule implements Module {
 
     @Override
     public void init(Properties properties) {
-        this.configuration = new SeleniumConfiguration(properties);
+        this.configuration = new SeleniumConfiguration();
     }
 
     @Override
@@ -181,5 +181,6 @@ public class SeleniumModule implements Module {
             }
             super.afterTestTearDown(testObject, testMethod);
         }
+
     }
 }

@@ -2,6 +2,7 @@ package sur.snapps.unitils.modules.selenium;
 
 import com.saucelabs.common.SauceOnDemandAuthentication;
 
+import java.io.IOException;
 import java.util.Properties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -31,15 +32,23 @@ public class SeleniumConfiguration {
     private boolean sauceActivated;
     private SauceOnDemandAuthentication sauceAuthentication;
 
-    public SeleniumConfiguration(Properties properties) {
+    public SeleniumConfiguration() {
+        Properties properties = new Properties();
+        // TODO do this in core package
+        try {
+            properties.load(ClassLoader.getSystemResourceAsStream("jetta-config.properties"));
+            properties.load(ClassLoader.getSystemResourceAsStream("jetta-local-config.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         annotationBased = getBoolean(ANNOTATION_BASED, true, properties);
         baseUrl = getString(BASE_URL, properties);
         driverType = SeleniumWebDriverType.valueOf(getString(DRIVER_TYPE, properties));
         sauceActivated = getBoolean(SAUCE_ACTIVATED, false, properties);
 
         if (sauceActivated) {
-            String sauceUsername = getString(SAUCE_USERNAME, null, properties);
-            String saucePassword = getString(SAUCE_PASSWORD, null, properties);
+            String sauceUsername = getString(SAUCE_USERNAME, System.getProperty("SAUCE_USERNAME"), properties);
+            String saucePassword = getString(SAUCE_PASSWORD, System.getProperty("SAUCE_PASSWORD"), properties);
             checkNotNull(sauceUsername);
             checkNotNull(saucePassword);
             sauceAuthentication = new SauceOnDemandAuthentication(sauceUsername, saucePassword);
@@ -54,12 +63,12 @@ public class SeleniumConfiguration {
         return baseUrl;
     }
 
-    public SeleniumWebDriverType driverType() {
-        return driverType;
-    }
-
     public boolean sauceActivated() {
         return sauceActivated;
+    }
+
+    public SeleniumWebDriverType driverType() {
+        return driverType;
     }
 
     public SauceOnDemandAuthentication sauceAuthentication() {
