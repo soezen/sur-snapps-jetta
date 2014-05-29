@@ -17,11 +17,13 @@ public class SauceTestWatcher implements TestRule {
     private TestWatcher watcher;
 
     public void setReportWatcher(SauceOnDemandTestWatcher watcher) {
+        System.out.println("SET: " + watcher);
         this.watcher = watcher;
     }
 
     @Override
     public Statement apply(Statement base, Description description) {
+        System.out.println("APPLY");
         return watcher.apply(base, description);
     }
 }
