@@ -1,8 +1,6 @@
 package sur.snapps.unitils.modules.selenium;
 
 import com.saucelabs.common.SauceOnDemandAuthentication;
-import com.saucelabs.junit.SauceOnDemandTestWatcher;
-import com.saucelabs.saucerest.SauceREST;
 import org.apache.commons.lang.NotImplementedException;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
@@ -101,20 +99,6 @@ public class SeleniumModule implements Module {
         }
     }
 
-    // TODO test
-    private void createAndInjectSauceTestWatcher(Object testObject) {
-        Set<Field> watcherFields = ReflectionUtils.getFieldsOfType(testObject.getClass(), SauceOnDemandTestWatcher.class, false);
-        if (watcherFields.size() == 1) {
-            SauceOnDemandTestWatcher testWatcher = ReflectionUtils.getFieldValue(testObject, watcherFields.iterator().next());
-            SauceREST sauceRest = new SauceREST(configuration.sauceAuthentication().getUsername(), configuration.sauceAuthentication().getAccessKey());
-            try {
-                ReflectionUtils.setFieldValue(testWatcher, "sauceREST", sauceRest);
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     private WebDriver createWebDriver() {
         if (configuration.sauceActivated()) {
             return createSauceWebDriver();
@@ -185,9 +169,6 @@ public class SeleniumModule implements Module {
                 createAndInjectWebDriver(testObject);
                 createAndInjectWebPages(testObject);
 
-                if (configuration.sauceActivated()) {
-                    createAndInjectSauceTestWatcher(testObject);
-                }
                 PageFactory.initElements(driver, testObject);
             }
             super.beforeTestSetUp(testObject, testMethod);
