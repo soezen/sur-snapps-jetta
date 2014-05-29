@@ -24,6 +24,7 @@ public class SauceTestWatcher extends TestWatcher {
     public SauceTestWatcher(SauceOnDemandSessionIdProvider target, boolean verboseMode) {
         this.target = target;
         this.verboseMode = verboseMode;
+        // TODO make configuration singleton
         SeleniumConfiguration configuration = new SeleniumConfiguration();
         activated = configuration.sauceActivated();
     }

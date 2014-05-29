@@ -47,11 +47,11 @@ public class SeleniumConfiguration {
         sauceActivated = getBoolean(SAUCE_ACTIVATED, false, properties);
 
         if (sauceActivated) {
-            String sauceUsername = getString(SAUCE_USERNAME, System.getProperty("SAUCE_USERNAME"), properties);
-            String saucePassword = getString(SAUCE_PASSWORD, System.getProperty("SAUCE_PASSWORD"), properties);
+            String sauceUsername = getString(SAUCE_USERNAME, System.getenv("SAUCE_USER_NAME"), properties);
+            String sauceApiKey = getString(SAUCE_PASSWORD, System.getenv("SAUCE_API_KEY"), properties);
             checkNotNull(sauceUsername);
-            checkNotNull(saucePassword);
-            sauceAuthentication = new SauceOnDemandAuthentication(sauceUsername, saucePassword);
+            checkNotNull(sauceApiKey);
+            sauceAuthentication = new SauceOnDemandAuthentication(sauceUsername, sauceApiKey);
         }
     }
 
