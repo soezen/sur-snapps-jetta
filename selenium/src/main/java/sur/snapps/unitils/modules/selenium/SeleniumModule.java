@@ -103,15 +103,12 @@ public class SeleniumModule implements Module {
 
     // TODO test
     private void createAndInjectSauceTestWatcher(Object testObject) {
-        if (testObject instanceof SauceTestWatcher) {
-            SauceOnDemandSessionIdProvider sauceTestObject = (SauceOnDemandSessionIdProvider) testObject;
-            SauceOnDemandTestWatcher watcher = new SauceOnDemandTestWatcher(sauceTestObject, configuration.sauceAuthentication());
-            Set<Field> watcherFields = ReflectionUtils.getFieldsOfType(testObject.getClass(), SauceTestWatcher.class, false);
-            if (watcherFields.size() == 1) {
-                LOGGER.info("HIER");
-                SauceTestWatcher testWatcher = ReflectionUtils.getFieldValue(testObject, watcherFields.iterator().next());
-                testWatcher.setReportWatcher(watcher);
-            }
+        SauceOnDemandSessionIdProvider sauceTestObject = (SauceOnDemandSessionIdProvider) testObject;
+        SauceOnDemandTestWatcher watcher = new SauceOnDemandTestWatcher(sauceTestObject, configuration.sauceAuthentication());
+        Set<Field> watcherFields = ReflectionUtils.getFieldsOfType(testObject.getClass(), SauceTestWatcher.class, false);
+        if (watcherFields.size() == 1) {
+            SauceTestWatcher testWatcher = ReflectionUtils.getFieldValue(testObject, watcherFields.iterator().next());
+            testWatcher.setReportWatcher(watcher);
         }
     }
 
