@@ -5,7 +5,7 @@
     <groupId>sur.snapps.unitils</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <modules>
         <module>database</module>
         <module>selenium</module>
@@ -38,11 +38,6 @@
             </plugin>
         </plugins>
         <extensions>
-            <!--<extension>-->
-                <!--<groupId>org.apache.maven.wagon</groupId>-->
-                <!--<artifactId>wagon-webdav</artifactId>-->
-                <!--<version>1.0-beta-2</version>-->
-            <!--</extension>-->
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
                 <artifactId>wagon-webdav-jackrabbit</artifactId>
