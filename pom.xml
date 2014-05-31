@@ -5,7 +5,7 @@
     <groupId>sur.snapps.jetta</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.1</version>
     <modules>
         <module>core</module>
         <module>database</module>
@@ -50,7 +50,7 @@
     <scm>
         <url>https://git.cloudbees.com/snapps/unitils.git</url>
         <developerConnection>scm:git:ssh://git@git.cloudbees.com/snapps/unitils.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v.0.0.1-jetta</tag>
     </scm>
 
     <distributionManagement>
