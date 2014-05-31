@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.easymock.annotation.Mock;
 import org.unitils.easymock.util.Order;
+import sur.snapps.jetta.database.script.ScriptRunner;
 
 import java.sql.Connection;
 import java.sql.SQLException;
