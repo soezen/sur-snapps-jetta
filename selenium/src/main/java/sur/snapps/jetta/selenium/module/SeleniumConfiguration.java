@@ -1,6 +1,7 @@
 package sur.snapps.jetta.selenium.module;
 
 import sur.snapps.jetta.core.config.JettaConfiguration;
+import sur.snapps.jetta.core.config.JettaMainConfiguration;
 import sur.snapps.jetta.core.config.JettaProperty;
 import sur.snapps.jetta.selenium.annotations.SeleniumWebDriverType;
 
@@ -10,7 +11,7 @@ import sur.snapps.jetta.selenium.annotations.SeleniumWebDriverType;
  * Time: 18:57
  */
 @JettaConfiguration("sur.snapps.jetta.selenium")
-public class SeleniumConfiguration {
+public class SeleniumConfiguration extends JettaMainConfiguration {
 
     // TODO add current status of account, if this does not match the transaction amounts then that amount is accredited to something and any transaction added in that period has to be taken from there (perhaps not physically if it is a calculated amount)
 

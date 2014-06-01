@@ -3,7 +3,6 @@ package sur.snapps.jetta.database.module;
 import sur.snapps.jetta.core.rules.JettaRuleModule;
 import sur.snapps.jetta.database.script.Script;
 import sur.snapps.jetta.database.script.ScriptRunner;
-import sur.snapps.jetta.database.module.DatabaseConfiguration;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -47,12 +46,14 @@ public class DatabaseModule extends JettaRuleModule {
 
     private void initializeConnection() {
         try {
-            DatabaseConfiguration.DataSource dataSource = configuration.dataSource();
-            Class.forName(dataSource.driver());
-            connection = DriverManager.getConnection(
-                    dataSource.url(),
-                    dataSource.username(),
-                    dataSource.password());
+            if (connection == null || connection.isClosed()) {
+                DatabaseConfiguration.DataSource dataSource = configuration.dataSource();
+                Class.forName(dataSource.driver());
+                connection = DriverManager.getConnection(
+                        dataSource.url(),
+                        dataSource.username(),
+                        dataSource.password());
+            }
         } catch (ClassNotFoundException | SQLException e) {
             throw new IllegalArgumentException(e);
         }

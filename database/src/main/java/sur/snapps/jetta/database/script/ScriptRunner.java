@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * User: SUR
@@ -17,6 +18,8 @@ import java.util.List;
  * Time: 20:32
  */
 public class ScriptRunner {
+
+    private static final Logger LOGGER = Logger.getLogger("ScriptRunner");
 
     // TODO transactions?
     public static void executeScript(Connection connection, String scriptLocation) {
@@ -28,6 +31,7 @@ public class ScriptRunner {
                 statement.addBatch(sqlStatement);
             }
             statement.executeBatch();
+            connection.commit();
         } catch (SQLException e) {
             throw new IllegalArgumentException(e);
         }
@@ -49,7 +53,10 @@ public class ScriptRunner {
             while ((line = lineReader.readLine()) != null) {
                 lineBuilder.append(" ").append(line.trim());
                 if (line.endsWith(";")) {
-                    statements.add(lineBuilder.toString().trim());
+                    String statement = lineBuilder.toString();
+                    statement = statement.replaceAll(";", "").trim();
+                    statements.add(statement);
+                    LOGGER.info("SQL: " + statement);
                     lineBuilder = new StringBuilder();
                 }
             }

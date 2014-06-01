@@ -78,7 +78,6 @@ public class SeleniumModule extends JettaRuleModule {
                     driver = createWebDriver();
                     LOGGER.info("driver = " + driver);
                     LOGGER.info("base url " + configuration.baseUrl());
-//                    driver.get(configuration.baseUrl());
                     driver.navigate().to(configuration.baseUrl());
                     ReflectionUtils.setFieldValue(target, field, driver);
                 }

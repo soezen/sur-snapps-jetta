@@ -46,12 +46,11 @@ public class SauceModule extends JettaWatcherModule {
             Utils.addBuildNumberToUpdate(updates);
             sauceREST.updateJobInfo(sessionIdProvider.getSessionId(), updates);
 
-            // TODO put in config
-//            if (verboseMode) {
+            if (configuration.logging()) {
                 // get, and print to StdOut, the link to the job
                 String authLink = sauceREST.getPublicJobLink(sessionIdProvider.getSessionId());
                 System.out.println("Job link: " + authLink);
-//            }
+            }
         }
     }
 }

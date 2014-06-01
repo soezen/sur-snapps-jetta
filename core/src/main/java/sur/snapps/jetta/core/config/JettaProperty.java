@@ -14,7 +14,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JettaProperty {
 
-    // TODO validation: can only be placed on Strings or booleans
+    // TODO validation: can only be placed on Strings or boolean or integers
+    // TODO custom exceptions for incorrect configuration
 
     String property();
 
