@@ -1,4 +1,4 @@
-package sur.snapps.unitils.modules.database;
+package sur.snapps.jetta.database.script;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
