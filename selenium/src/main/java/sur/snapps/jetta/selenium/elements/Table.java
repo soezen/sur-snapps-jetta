@@ -28,6 +28,14 @@ public class Table {
         columns = Maps.newHashMap();
     }
 
+    public Map<String, Column> columns() {
+        return columns;
+    }
+
+    public String id() {
+        return id;
+    }
+
     public boolean isPresent() {
         return !driver.findElements(By.id(id)).isEmpty();
     }
@@ -50,15 +58,17 @@ public class Table {
     public List<WebElement> links(String columnName, int rowIndex) {
         WebElement cell = cell(columnName, rowIndex);
 
-        return cell == null
-                ? Lists.<WebElement>newArrayList()
-                : cell.findElements(By.tagName("a"));
+        return (cell == null) ? Lists.<WebElement>newArrayList() : cell.findElements(By.tagName("a"));
     }
 
     public WebElement cell(String columnName, int rowIndex) {
+        return cell(row(rowIndex), columnName);
+    }
+
+    public WebElement cell(WebElement row, String columnName) {
         Column column = columns.get(columnName);
-        int columnIndex = column.index();
-        List<WebElement> cells = cells(rowIndex);
+        int columnIndex = column.index() - 1;
+        List<WebElement> cells = cells(row);
 
         if (columnIndex >= cells.size()) {
             if (column.optional()) {
@@ -69,8 +79,8 @@ public class Table {
         return cells.get(columnIndex);
     }
 
-    private List<WebElement> cells(int rowIndex) {
-        return row(rowIndex).findElements(By.tagName("td"));
+    private List<WebElement> cells(WebElement row) {
+        return row.findElements(By.tagName("td"));
     }
 
     private WebElement row(int rowIndex) {
@@ -78,6 +88,10 @@ public class Table {
             throw new IllegalArgumentException("not that many rows in table");
         }
         return rows().get(rowIndex - 1);
+    }
+
+    public RowCriteria rowCriteria() {
+        return new RowCriteria(this, driver);
     }
 
 }
