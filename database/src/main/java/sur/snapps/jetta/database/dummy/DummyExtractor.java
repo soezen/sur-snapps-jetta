@@ -20,6 +20,7 @@ import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.Map;
 
@@ -31,44 +32,75 @@ public class DummyExtractor {
     public DummyExtractor(String xmlFileLocation) {
         this.xmlFileLocation = xmlFileLocation;
     }
-    
-    public <D> D get(Class<D> dummyClass, String[] identifier) {
-        checkValidDummyClass(dummyClass);
-        
-        Document doc = getDocument();
-        doc.getDocumentElement().normalize();
 
-        String xpath = getXpathExpression(dummyClass.getAnnotation(Dummy.class), identifier);
-        Node dummyNode = getSingleNode(doc, xpath);
+    public <D> D doAction(D dummy, String action) {
+        String identifier = getDummyIdentifier(dummy.getClass());
+        String identifierValue = ReflectionUtils.getFieldValue(dummy, ReflectionUtils.getFieldWithName(dummy.getClass(), identifier, false));
+
+        String xpath = xpathToSelectDummy(dummy.getClass(), identifierValue);
+        Node dummyNode = getSingleNode(getDocument(), xpath);
+        if (dummyNode != null) {
+            return (D) initializeDummyWithAction(dummy.getClass(), dummyNode, action);
+        }
+        throw new IllegalArgumentException("invalid dummy locator, unable to find dummy in file (xpath = " + xpath + ")");
+    }
+    
+    public <D> D get(Class<D> dummyClass, String identifierValue) {
+        checkValidDummyClass(dummyClass);
+
+        String xpath = xpathToSelectDummy(dummyClass, identifierValue);
+        Node dummyNode = getSingleNode(getDocument(), xpath);
         if (dummyNode != null) {
             return initializeDummy(dummyClass, dummyNode);
         } 
-        throw new IllegalArgumentException("invalid dummy locator, unable to find dummy in file (xpath = " + xpath);
+        throw new IllegalArgumentException("invalid dummy locator, unable to find dummy in file (xpath = " + xpath + ")");
+    }
+
+    private <D> D initializeDummy(Class<D> dummyClass, Node dummyNode) {
+        return initializeDummyWithAction(dummyClass, dummyNode, null);
     }
     
-    private <D> D initializeDummy(Class<D> dummyClass, Node dummyNode) {
+    private <D> D initializeDummyWithAction(Class<D> dummyClass, Node dummyNode, String action) {
         D dummy = ReflectionUtils.createInstanceOfType(dummyClass, false);
         
-        Map<String, Node> childNodes = getChildNodes(dummyNode);
-        
+        Map<String, Node> childNodes = getChildNodes(dummyNode, action);
+
         for (Field field : ReflectionUtils.getAllFields(dummyClass)) {
             String fieldName = field.getName();
+
             if (childNodes.containsKey(fieldName)) {
                 String nodeValue = getNodeValue(childNodes, fieldName);
-                if (field.getType().equals(boolean.class)) {
-                    ReflectionUtils.setFieldValue(dummy, field, Boolean.parseBoolean(nodeValue));
-                } else if (field.getType().equals(int.class)) {
-                    ReflectionUtils.setFieldValue(dummy, field, Integer.valueOf(nodeValue));
-                } else if (field.getType().equals(Date.class)) {
-                    Date dateValue = new DateExpression(nodeValue).parse();
-                    ReflectionUtils.setFieldValue(dummy, field, dateValue);
-                } else {
-                    ReflectionUtils.setFieldValue(dummy, field, nodeValue);
-                }
+                Object value = determineValue(field.getType(), nodeValue);
+                ReflectionUtils.setFieldValue(dummy, field, value);
             }
         }
         
         return dummy;
+    }
+
+    private Node findAction(Node actionsNode, String action) {
+        NodeList childNodes = actionsNode.getChildNodes();
+        for (int index = 0; index < childNodes.getLength(); index++) {
+            Node actionNode = childNodes.item(index);
+            if (actionNode.getNodeType() == Node.ELEMENT_NODE
+                && actionNode.getAttributes().getNamedItem("id").getTextContent().equals(action)) {
+                return actionNode;
+            }
+        }
+        return null;
+    }
+
+    private Object determineValue(Type type, String stringValue) {
+        if (type.equals(boolean.class)) {
+            return Boolean.parseBoolean(stringValue);
+        } else if (type.equals(int.class)) {
+            return Integer.valueOf(stringValue);
+        } else if (type.equals(Date.class)) {
+            return new DateExpression(stringValue).parse();
+        } else if (type.equals(String.class)) {
+            return stringValue;
+        }
+        return null;
     }
 
     private String getNodeValue(Map<String, Node> childNodes, String fieldName) {
@@ -82,27 +114,43 @@ public class DummyExtractor {
         return node.getTextContent();
     }
     
-    private Map<String, Node> getChildNodes(Node node) {
+    private Map<String, Node> getChildNodes(Node node, String action) {
         Map<String, Node> childNodes = Maps.newHashMap();
-        
-        NodeList nodeList = node.getChildNodes();
-        for (int index = 0; index < nodeList.getLength(); index++) {
-            Node childNode = nodeList.item(index);
-            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                String nodeName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, childNode.getNodeName());
-                childNodes.put(nodeName, childNode);
-            }
+
+        putNodesInMap(childNodes, node.getChildNodes());
+
+        if (action != null) {
+            Node actionNode = findAction(childNodes.get("actions"), action);
+            putNodesInMap(childNodes, actionNode.getChildNodes());
         }
-        
+
         return childNodes;
     }
-    
-    private String getXpathExpression(Dummy dummy, String[] identifier) {
-        if (identifier.length != 2) {
-            throw new IllegalArgumentException("invalid identifier, requires key and value: " + identifier);
+
+    private void putNodesInMap(Map<String, Node> mappedNodes, NodeList nodes) {
+        for (int index = 0; index < nodes.getLength(); index++) {
+            Node childNode = nodes.item(index);
+            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+                String nodeName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, childNode.getNodeName());
+                mappedNodes.put(nodeName, childNode);
+            }
         }
-        
-        return "//dummies/" + dummy.value() + "[" + identifier[0] + "[text()='" + identifier[1] + "']]";
+    }
+
+    private String xpathToSelectDummy(Class<?> dummyClass, String identifierValue) {
+        String identifier = getDummyIdentifier(dummyClass);
+        Dummy dummy = dummyClass.getAnnotation(Dummy.class);
+
+        return "//dummies/" + dummy.value() + "[" + identifier + "[text()='" + identifierValue + "']]";
+    }
+
+    private String getDummyIdentifier(Class<?> dummyClass) {
+        for (Field field : ReflectionUtils.getAllFields(dummyClass)) {
+            if (field.isAnnotationPresent(Identifier.class)) {
+                return field.getName();
+            }
+        }
+        throw new IllegalStateException("invalid dummy class, missing @Identifier on one of fields");
     }
     
     // TODO allow to have multiple identifiers
@@ -125,12 +173,11 @@ public class DummyExtractor {
             if (inputStream == null) {
                 throw new IllegalArgumentException("error locating xml file: " + xmlFileLocation);
             }
-            return builder.parse(inputStream);
-        } catch (ParserConfigurationException e) {
-            throw new IllegalArgumentException("error loading xml file: " + xmlFileLocation);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("error loading xml file: " + xmlFileLocation);
-        } catch (SAXException e) {
+
+            Document doc = builder.parse(inputStream);
+            doc.getDocumentElement().normalize();
+            return doc;
+        } catch (ParserConfigurationException | IOException | SAXException e) {
             throw new IllegalArgumentException("error loading xml file: " + xmlFileLocation);
         }
     }
