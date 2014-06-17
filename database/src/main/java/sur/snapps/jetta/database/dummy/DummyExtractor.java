@@ -7,8 +7,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import sur.snapps.jetta.database.dummy.annotations.Calculated;
+import sur.snapps.jetta.database.dummy.annotations.Dummy;
 import sur.snapps.jetta.database.dummy.expression.DateExpression;
 
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -67,15 +70,26 @@ public class DummyExtractor {
 
         for (Field field : ReflectionUtils.getAllFields(dummyClass)) {
             String fieldName = field.getName();
+            Object value = null;
 
-            if (childNodes.containsKey(fieldName)) {
+            if (field.isAnnotationPresent(Calculated.class)) {
+                // TODO put constraint on @Identifier (only string allowed)? -->
+                value = determineValue(field.getAnnotation(Calculated.class), getIdentifierValue(dummy));
+            } else if (childNodes.containsKey(fieldName)) {
                 String nodeValue = getNodeValue(childNodes, fieldName);
-                Object value = determineValue(field.getType(), nodeValue);
-                ReflectionUtils.setFieldValue(dummy, field, value);
+                value = determineValue(field.getType(), nodeValue);
             }
+
+            ReflectionUtils.setFieldValue(dummy, field, value);
         }
         
         return dummy;
+    }
+
+    private String getIdentifierValue(Object dummy) {
+        String identifier = getDummyIdentifier(dummy.getClass());
+        Field identifierField = ReflectionUtils.getFieldWithName(dummy.getClass(), identifier, false);
+        return ReflectionUtils.getFieldValue(dummy, identifierField);
     }
 
     private Node findAction(Node actionsNode, String action) {
@@ -99,6 +113,21 @@ public class DummyExtractor {
             return new DateExpression(stringValue).parse();
         } else if (type.equals(String.class)) {
             return stringValue;
+        }
+        return null;
+    }
+
+    private Object determineValue(Calculated calculated, String fkValue) {
+        return getByXPath(getDocument(), xpathFromSelector(calculated, fkValue), XPathConstants.BOOLEAN);
+    }
+
+    private Object applyFormula(String operator, String conditionValue, String value) {
+        if (conditionValue.startsWith("'") && conditionValue.endsWith("'")) {
+            conditionValue = conditionValue.substring(1, conditionValue.length() - 1);
+        }
+
+        if ("eq".equals(operator)) {
+            return conditionValue.equals(value);
         }
         return null;
     }
@@ -141,7 +170,11 @@ public class DummyExtractor {
         String identifier = getDummyIdentifier(dummyClass);
         Dummy dummy = dummyClass.getAnnotation(Dummy.class);
 
-        return "//dummies/" + dummy.value() + "[" + identifier + "[text()='" + identifierValue + "']]";
+        return "//dummies/" + dummy.value() + "[" + identifier + "[normalize-space(text())='" + identifierValue + "']]";
+    }
+
+    private String xpathFromSelector(Calculated calculated, String value) {
+        return "//dummies/" + calculated.selector() + "[" + calculated.fk() + "=//dummies/users/user[username='" + value + "']/" + calculated.id() + "]/" + calculated.formula();
     }
 
     private String getDummyIdentifier(Class<?> dummyClass) {
@@ -154,15 +187,23 @@ public class DummyExtractor {
     }
     
     // TODO allow to have multiple identifiers
-    private Node getSingleNode(Document doc, String expression) {
+    private <T> T getByXPath(Document doc, String expression, QName qname) {
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
         try {
             XPathExpression xpathExpression = xpath.compile(expression);
-            return (Node) xpathExpression.evaluate(doc, XPathConstants.NODE);
+            return (T) xpathExpression.evaluate(doc, qname);
         } catch (XPathExpressionException e) {
             throw new IllegalArgumentException("invalid dummy locator, unable to find dummy in file (xpath = " + expression);
         }
+    }
+
+    private Node getSingleNode(Document doc, String expression) {
+        return getByXPath(doc, expression, XPathConstants.NODE);
+    }
+
+    private NodeList getNodeList(Document doc, String expression) {
+        return getByXPath(doc, expression, XPathConstants.NODESET);
     }
     
     private Document getDocument() {

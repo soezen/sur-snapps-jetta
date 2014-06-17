@@ -1,4 +1,4 @@
-package sur.snapps.jetta.database.dummy;
+package sur.snapps.jetta.database.dummy.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

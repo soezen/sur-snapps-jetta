@@ -58,7 +58,7 @@ public class Table {
     public List<WebElement> links(String columnName, int rowIndex) {
         WebElement cell = cell(columnName, rowIndex);
 
-        return (cell == null) ? Lists.<WebElement>newArrayList() : cell.findElements(By.tagName("a"));
+        return (cell != null) ? cell.findElements(By.tagName("a")) : Lists.<WebElement>newArrayList();
     }
 
     public WebElement cell(String columnName, int rowIndex) {
