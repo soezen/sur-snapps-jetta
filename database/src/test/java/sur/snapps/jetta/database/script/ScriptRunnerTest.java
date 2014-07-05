@@ -5,7 +5,6 @@ import org.junit.runner.RunWith;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.easymock.annotation.Mock;
 import org.unitils.easymock.util.Order;
-import sur.snapps.jetta.database.script.ScriptRunner;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -32,7 +31,19 @@ public class ScriptRunnerTest {
         expect(connection.createStatement()).andReturn(statement);
         statement.addBatch("delete from users");
         expect(statement.executeBatch()).andReturn(new int[0]);
+        expect(connection.getAutoCommit()).andReturn(false);
         connection.commit();
+        replay();
+
+        ScriptRunner.executeScript(connection, "scripts/testExecuteScriptWithOneStatement.sql");
+    }
+
+    @Test
+    public void testExecuteScriptWithAutoCommit() throws SQLException {
+        expect(connection.createStatement()).andReturn(statement);
+        statement.addBatch("delete from users");
+        expect(statement.executeBatch()).andReturn(new int[0]);
+        expect(connection.getAutoCommit()).andReturn(true);
         replay();
 
         ScriptRunner.executeScript(connection, "scripts/testExecuteScriptWithOneStatement.sql");
@@ -45,6 +56,7 @@ public class ScriptRunnerTest {
         statement.addBatch("delete from entities");
         statement.addBatch("delete from tokens");
         expect(statement.executeBatch()).andReturn(new int[0]);
+        expect(connection.getAutoCommit()).andReturn(false);
         connection.commit();
         replay();
 
@@ -56,6 +68,7 @@ public class ScriptRunnerTest {
         expect(connection.createStatement()).andReturn(statement);
         statement.addBatch("delete from users where id = 'test' and name like 'this'");
         expect(statement.executeBatch()).andReturn(new int[0]);
+        expect(connection.getAutoCommit()).andReturn(false);
         connection.commit();
         replay();
 
@@ -69,6 +82,7 @@ public class ScriptRunnerTest {
         statement.addBatch("delete from entities where user_id in ( select id from users )");
         statement.addBatch("delete from tokens where id = 'this'");
         expect(statement.executeBatch()).andReturn(new int[0]);
+        expect(connection.getAutoCommit()).andReturn(false);
         connection.commit();
         replay();
 
