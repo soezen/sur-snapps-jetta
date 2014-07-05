@@ -24,6 +24,7 @@ public class SeleniumConfiguration extends JettaMainConfiguration {
     private SeleniumWebDriverType driverType;
     @JettaProperty(property = "sauce.activated", required = false, defaultValue = "false")
     private boolean sauceActivated;
+    // TODO add attribute to specify to look also at system properties?
     @JettaProperty(property = "sauce.username", required = false)
     private String sauceUsername;
     @JettaProperty(property = "sauce.api_key", required = false)

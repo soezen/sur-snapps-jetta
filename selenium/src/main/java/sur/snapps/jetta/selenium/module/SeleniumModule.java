@@ -12,6 +12,7 @@ import sur.snapps.jetta.core.rules.JettaRuleModule;
 import sur.snapps.jetta.selenium.annotations.SeleniumTestCase;
 import sur.snapps.jetta.selenium.annotations.SeleniumWebDriver;
 import sur.snapps.jetta.selenium.annotations.SeleniumWebDriverType;
+import sur.snapps.jetta.selenium.elements.BaseUrl;
 import sur.snapps.jetta.selenium.elements.Column;
 import sur.snapps.jetta.selenium.elements.Table;
 import sur.snapps.jetta.selenium.elements.WebPage;
@@ -46,6 +47,7 @@ public class SeleniumModule extends JettaRuleModule {
             LOGGER.info("SeleniumModule ACTIVATED");
             createAndInjectWebDriver(target);
             createAndInjectWebPages(target);
+            injectBaseUrl(target);
 
             PageFactory.initElements(driver, target);
         }
@@ -66,6 +68,20 @@ public class SeleniumModule extends JettaRuleModule {
     public void quit() {
         if (driver != null) {
             driver.quit();
+        }
+    }
+
+    private void injectBaseUrl(Object target) {
+        Set<Field> fields = ReflectionUtils.getAllFields(target.getClass());
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(BaseUrl.class)) {
+                if (field.getType().equals(String.class)) {
+                    ReflectionUtils.setFieldValue(target, field, configuration.baseUrl());
+                } else {
+                    // TODO create jetta configuration exception
+                    throw new IllegalStateException("@BaseUrl has to be on a String");
+                }
+            }
         }
     }
 
