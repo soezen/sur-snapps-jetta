@@ -31,7 +31,9 @@ public class ScriptRunner {
                 statement.addBatch(sqlStatement);
             }
             statement.executeBatch();
-            connection.commit();
+            if (!connection.getAutoCommit()) {
+                connection.commit();
+            }
         } catch (SQLException e) {
             throw new IllegalArgumentException(e);
         }
