@@ -14,4 +14,6 @@ public class SeleniumTestRule extends JettaTestRule<SeleniumModule> {
     public SeleniumTestRule(Object target) {
         super(target, new SeleniumModule());
     }
+
+
 }

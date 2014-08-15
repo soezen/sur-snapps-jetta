@@ -27,10 +27,12 @@ public class JettaTestRule<M extends JettaRuleModule> implements TestRule {
             @Override
             public void evaluate() throws Throwable {
                 module.init(target, description.getMethodName());
+                boolean success = false;
                 try {
                     base.evaluate();
+                    success = true;
                 } finally {
-                    module.quit();
+                    module.quit(success);
                 }
             }
         };

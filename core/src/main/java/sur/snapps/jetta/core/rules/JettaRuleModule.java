@@ -11,5 +11,5 @@ public abstract class JettaRuleModule extends JettaModule {
 
     public abstract void init(Object target, String testName);
 
-    public abstract void quit();
+    public abstract void quit(boolean success);
 }

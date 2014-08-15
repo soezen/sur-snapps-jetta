@@ -45,7 +45,7 @@ public class DatabaseModule extends JettaRuleModule {
     }
 
     @Override
-    public void quit() {
+    public void quit(boolean success) {
         try {
             connection.close();
         } catch (SQLException ignored) {
