@@ -29,6 +29,12 @@ public class SeleniumConfiguration extends JettaMainConfiguration {
     private String sauceUsername;
     @JettaProperty(property = "sauce.api_key", required = false)
     private String sauceApiKey;
+    @JettaProperty(property = "screenshot_on_failure", required = false, defaultValue = "false")
+    private boolean screenshotOnFailure;
+
+    public boolean takeScreenshotOnFailure() {
+        return screenshotOnFailure;
+    }
 
     public boolean annotationBased() {
         return annotationBased;

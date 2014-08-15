@@ -78,7 +78,7 @@ public class SeleniumModule extends JettaRuleModule {
     }
 
     public void quit(boolean success) {
-        if (!success) {
+        if (!success && configuration.takeScreenshotOnFailure()) {
             File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
             try {
                 System.out.println(scrFile.getName());
