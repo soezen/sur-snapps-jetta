@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.easymock.annotation.Mock;
+import sur.snapps.jetta.database.DatabaseDialect;
 import sur.snapps.jetta.database.counter.expression.Expression;
 import sur.snapps.jetta.database.counter.table.Table;
 
@@ -35,14 +36,14 @@ public class CountStatementTest {
         expect(table.alias()).andReturn("a").times(2);
         expect(table.primaryKey()).andReturn("id");
         expect(table.nameWithJoins()).andReturn("name");
-        expect(expression.expression()).andReturn("expr");
+        expect(expression.expression(DatabaseDialect.MYSQL)).andReturn("expr");
         expect(connection.createStatement()).andReturn(statement);
         expect(statement.executeQuery("SELECT count(a.id) as count FROM name WHERE expr")).andReturn(resultSet);
         expect(resultSet.next()).andReturn(true);
         expect(resultSet.getInt("count")).andReturn(1);
         replay();
         
-        CountStatement countStatement = new CountStatement(connection);
+        CountStatement countStatement = new CountStatement(connection, DatabaseDialect.MYSQL);
         countStatement.from(table);
         countStatement.where(expression);
         int count = countStatement.get();
@@ -61,7 +62,7 @@ public class CountStatementTest {
         expect(resultSet.getInt("count")).andReturn(1);
         replay();
         
-        CountStatement countStatement = new CountStatement(connection);
+        CountStatement countStatement = new CountStatement(connection, DatabaseDialect.MYSQL);
         countStatement.from(table);
         int count = countStatement.get();
 
@@ -70,14 +71,14 @@ public class CountStatementTest {
     
     @Test
     public void testGetWithoutAlias() throws SQLException {
-        expect(expression.expression()).andReturn("expr");
+        expect(expression.expression(DatabaseDialect.MYSQL)).andReturn("expr");
         expect(connection.createStatement()).andReturn(statement);
         expect(statement.executeQuery("SELECT count(*) as count FROM table WHERE expr")).andReturn(resultSet);
         expect(resultSet.next()).andReturn(true);
         expect(resultSet.getInt("count")).andReturn(1);
         replay();
         
-        CountStatement countStatement = new CountStatement(connection);
+        CountStatement countStatement = new CountStatement(connection, DatabaseDialect.MYSQL);
         countStatement.from("table");
         countStatement.where(expression);
         int count = countStatement.get();

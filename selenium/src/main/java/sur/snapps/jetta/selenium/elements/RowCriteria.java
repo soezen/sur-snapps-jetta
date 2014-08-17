@@ -52,9 +52,13 @@ public class RowCriteria {
     }
 
     public RowCriteria columnHasCheckIcon(String columnName, boolean checked) {
-        // TODO allow this to be configured by client
         String classPresent = checked ? CHECKED_ICON_CLASS : NOT_CHECKED_ICON_CLASS;
         constraints.add(xpathSelectColumn(columnName) + "[i[contains(@class, '" + classPresent + "')]]");
+        return this;
+    }
+
+    public RowCriteria columnIconHasClass(String columnName, String iconClass) {
+        constraints.add(xpathSelectColumn(columnName) + "[i[contains(@class, '" + iconClass + "')]]");
         return this;
     }
 

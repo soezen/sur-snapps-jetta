@@ -1,6 +1,7 @@
 package sur.snapps.jetta.database.counter.expression.conditional;
 
 import org.junit.Test;
+import sur.snapps.jetta.database.DatabaseDialect;
 import sur.snapps.jetta.database.counter.table.Column;
 
 import java.lang.reflect.Constructor;
@@ -17,7 +18,7 @@ public class ConditionalsTest {
         Column column = new Column("a", "column");
         Conditional result = Conditionals.like(column, "value");
         
-        assertEquals("a.column LIKE value", result.expression());
+        assertEquals("a.column LIKE value", result.expression(DatabaseDialect.MYSQL));
     }
 
     @Test
@@ -25,7 +26,7 @@ public class ConditionalsTest {
         Column column = new Column("a", "column");
         Conditional result = Conditionals.equal(column, "value");
         
-        assertEquals("a.column = value", result.expression());
+        assertEquals("a.column = value", result.expression(DatabaseDialect.MYSQL));
     }
 
     @Test
@@ -33,7 +34,7 @@ public class ConditionalsTest {
         Column column = new Column("a", "column");
         Conditional result = Conditionals.equal(column, column);
         
-        assertEquals("a.column = a.column", result.expression());
+        assertEquals("a.column = a.column", result.expression(DatabaseDialect.MYSQL));
     }
 
     @Test
@@ -41,7 +42,7 @@ public class ConditionalsTest {
         Column column = new Column("a", "column");
         Conditional result = Conditionals.isNull(column);
         
-        assertEquals("a.column IS NULL", result.expression());
+        assertEquals("a.column IS NULL", result.expression(DatabaseDialect.MYSQL));
     }
     
     @Test

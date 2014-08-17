@@ -1,5 +1,6 @@
-package sur.snapps.jetta.database.counter.expression.operator;
+package sur.snapps.jetta.database.counter.expression.operation;
 
+import sur.snapps.jetta.database.DatabaseDialect;
 import sur.snapps.jetta.database.counter.expression.Expression;
 
 import java.util.ArrayList;
@@ -8,12 +9,12 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class MultipleExpressionOperator implements Expression {
+public class MultipleOperationsExpression implements Expression {
 
     private String keyword;
     private List<Expression> expressions;
     
-    public MultipleExpressionOperator(String keyword, Expression expression1, Expression expression2, Expression...expressions) {
+    public MultipleOperationsExpression(String keyword, Expression expression1, Expression expression2, Expression... expressions) {
         this.keyword = keyword;
         this.expressions = new ArrayList<>();
         this.expressions.add(expression1);
@@ -22,13 +23,13 @@ public class MultipleExpressionOperator implements Expression {
     }
     
     @Override
-    public String expression() {
+    public String expression(DatabaseDialect dialect) {
         StringBuilder orExpression = new StringBuilder("(");
 
         Iterator<Expression> it = expressions.iterator();
         while (it.hasNext()) {
             Expression expression = it.next();
-            orExpression.append(expression.expression())
+            orExpression.append(expression.expression(dialect))
                 .append(it.hasNext() ? " " +  keyword + " " : "");
         }
         

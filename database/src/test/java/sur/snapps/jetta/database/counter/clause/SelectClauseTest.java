@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.unitils.UnitilsJUnit4TestClassRunner;
 import org.unitils.easymock.EasyMockUnitils;
 import org.unitils.easymock.annotation.Mock;
+import sur.snapps.jetta.database.DatabaseDialect;
 import sur.snapps.jetta.database.counter.table.Table;
 
 import static org.junit.Assert.assertEquals;
@@ -24,7 +25,7 @@ public class SelectClauseTest {
         
         SelectClause result = new SelectClause(table);
         
-        assertEquals("SELECT count(a.pk) as count", result.get());
+        assertEquals("SELECT count(a.pk) as count", result.get(DatabaseDialect.MYSQL));
     }
     
     @Test
@@ -34,7 +35,7 @@ public class SelectClauseTest {
         
         SelectClause result = new SelectClause(table);
         
-        assertEquals("SELECT count(*) as count", result.get());
+        assertEquals("SELECT count(*) as count", result.get(DatabaseDialect.MYSQL));
     }
     
 }

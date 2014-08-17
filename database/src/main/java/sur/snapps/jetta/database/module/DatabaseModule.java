@@ -32,7 +32,7 @@ public class DatabaseModule extends JettaRuleModule {
         Set<Field> fields = ReflectionUtils.getAllFields(target.getClass());
         for (Field field : fields) {
             if (field.getType().equals(RecordCounter.class)) {
-                ReflectionUtils.setFieldValue(target, field, new RecordCounter(connection));
+                ReflectionUtils.setFieldValue(target, field, new RecordCounter(connection, configuration.databaseDialect()));
             }
         }
     }

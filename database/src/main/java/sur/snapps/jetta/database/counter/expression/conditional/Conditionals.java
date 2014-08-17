@@ -2,28 +2,37 @@ package sur.snapps.jetta.database.counter.expression.conditional;
 
 import sur.snapps.jetta.database.counter.table.Column;
 
+import java.util.Date;
+
+import static sur.snapps.jetta.database.counter.expression.conditional.expression.ConditionExpressions.column;
+import static sur.snapps.jetta.database.counter.expression.conditional.expression.ConditionExpressions.dateColumn;
+import static sur.snapps.jetta.database.counter.expression.conditional.expression.ConditionExpressions.dateValue;
+import static sur.snapps.jetta.database.counter.expression.conditional.expression.ConditionExpressions.empty;
+import static sur.snapps.jetta.database.counter.expression.conditional.expression.ConditionExpressions.value;
+
 public class Conditionals {
     
-    private static final String LIKE = " LIKE ";
-    private static final String EQUAL = " = ";
-    private static final String IS = " IS ";
-    private static final String NULL = "NULL";
+
     
     private Conditionals() { }
     
     public static Conditional like(Column column, String value) {
-        return new Conditional(column.name(), LIKE, value);
+        return new Conditional(column(column), Comparator.LIKE, value(value));
     }
     
     public static Conditional equal(Column column, String value) {
-        return new Conditional(column.name(), EQUAL, value);
+        return new Conditional(column(column), Comparator.EQUAL, value(value));
+    }
+
+    public static Conditional equalDate(Column column, Date value) {
+        return new Conditional(dateColumn(column), Comparator.EQUAL, dateValue(value));
     }
     
     public static Conditional equal(Column column1, Column column2) {
-        return new Conditional(column1.name(), EQUAL, column2.name());
+        return new Conditional(column(column1), Comparator.EQUAL, column(column2));
     }
     
     public static Conditional isNull(Column column) {
-        return new Conditional(column.name(), IS, NULL);
+        return new Conditional(column(column), Comparator.IS, empty());
     }
 }

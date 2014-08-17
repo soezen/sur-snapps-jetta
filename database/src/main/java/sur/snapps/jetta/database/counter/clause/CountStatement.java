@@ -1,5 +1,6 @@
 package sur.snapps.jetta.database.counter.clause;
 
+import sur.snapps.jetta.database.DatabaseDialect;
 import sur.snapps.jetta.database.counter.expression.Expression;
 import sur.snapps.jetta.database.counter.table.Table;
 
@@ -11,12 +12,14 @@ import java.sql.Statement;
 public class CountStatement {
 
     private Connection connection;
+    private DatabaseDialect dialect;
     private SelectClause selectClause;
     private FromClause fromClause;
     private WhereClause whereClause;
 
-    public CountStatement(Connection connection) {
+    public CountStatement(Connection connection, DatabaseDialect dialect) {
         this.connection = connection;
+        this.dialect = dialect;
     }
 
     public CountStatement from(String tableName) {
@@ -36,7 +39,9 @@ public class CountStatement {
     }
     
     public int get() {
-        String sql = selectClause.get() + fromClause.get() + (whereClause != null ? whereClause.get() : "");
+        String sql = selectClause.get(dialect)
+                .concat(fromClause.get(dialect))
+                .concat((whereClause == null ? "" : whereClause.get(dialect)));
 
         try {
             Statement stmt = connection.createStatement();

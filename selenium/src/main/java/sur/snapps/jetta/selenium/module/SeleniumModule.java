@@ -59,7 +59,6 @@ public class SeleniumModule extends JettaRuleModule {
             LOGGER.info("SeleniumModule ACTIVATED");
             createAndInjectWebDriver(target);
             createAndInjectWebPages(target);
-            injectBaseUrl(target);
 
             PageFactory.initElements(driver, target);
         }
@@ -97,16 +96,13 @@ public class SeleniumModule extends JettaRuleModule {
         }
     }
 
-    private void injectBaseUrl(Object target) {
-        Set<Field> fields = ReflectionUtils.getAllFields(target.getClass());
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(BaseUrl.class)) {
-                if (field.getType().equals(String.class)) {
-                    ReflectionUtils.setFieldValue(target, field, configuration.baseUrl());
-                } else {
-                    // TODO create jetta configuration exception
-                    throw new IllegalStateException("@BaseUrl has to be on a String");
-                }
+    private void injectBaseUrl(Object target, Field field) {
+        if (field.isAnnotationPresent(BaseUrl.class)) {
+            if (field.getType().equals(String.class)) {
+                ReflectionUtils.setFieldValue(target, field, configuration.baseUrl());
+            } else {
+                // TODO create jetta configuration exception
+                throw new IllegalStateException("@BaseUrl has to be on a String");
             }
         }
     }
@@ -184,6 +180,8 @@ public class SeleniumModule extends JettaRuleModule {
                 createAndInjectEditField(testObject, field);
             } else if (field.isAnnotationPresent(WaitElement.class)) {
                 createAndInjectWaitElement(testObject, field);
+            } else if (field.isAnnotationPresent(BaseUrl.class)) {
+                injectBaseUrl(testObject, field);
             }
         }
     }

@@ -2,6 +2,7 @@ package sur.snapps.jetta.database.module;
 
 import sur.snapps.jetta.core.config.JettaConfiguration;
 import sur.snapps.jetta.core.config.JettaProperty;
+import sur.snapps.jetta.database.DatabaseDialect;
 
 /**
  * User: SUR
@@ -15,6 +16,8 @@ public class DatabaseConfiguration {
     private String scriptLocation;
     @JettaProperty(property = "script.clear", required = false)
     private String clearScript;
+    @JettaProperty(property = "dialect", required = true)
+    private DatabaseDialect dialect;
     @JettaProperty(property = "datasource.driver", required = true)
     private String dataSourceDriver;
     @JettaProperty(property = "datasource.url", required = true)
@@ -27,6 +30,10 @@ public class DatabaseConfiguration {
 
     public DataSource dataSource() {
         return new DataSource();
+    }
+
+    public DatabaseDialect databaseDialect() {
+        return dialect;
     }
 
     public String scriptLocation() {

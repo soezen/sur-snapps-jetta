@@ -1,6 +1,7 @@
 package sur.snapps.jetta.database.counter.clause;
 
 
+import sur.snapps.jetta.database.DatabaseDialect;
 import sur.snapps.jetta.database.counter.expression.Expression;
 
 public class WhereClause implements Clause {
@@ -12,8 +13,8 @@ public class WhereClause implements Clause {
     }
     
     @Override
-    public String get() {
-        return " WHERE " + expression.expression();
+    public String get(DatabaseDialect dialect) {
+        return " WHERE " + expression.expression(dialect);
     }
     
 }

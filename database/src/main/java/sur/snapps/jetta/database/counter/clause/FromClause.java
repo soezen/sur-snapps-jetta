@@ -1,6 +1,7 @@
 package sur.snapps.jetta.database.counter.clause;
 
 
+import sur.snapps.jetta.database.DatabaseDialect;
 import sur.snapps.jetta.database.counter.table.Table;
 
 public class FromClause implements Clause {
@@ -12,7 +13,7 @@ public class FromClause implements Clause {
     }
     
     @Override
-    public String get() {
+    public String get(DatabaseDialect dialect) {
         return new StringBuilder(" FROM ").append(table.nameWithJoins()).toString();
     }
 }
