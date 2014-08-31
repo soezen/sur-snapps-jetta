@@ -9,7 +9,7 @@ import sur.snapps.jetta.core.config.JettaProperty;
  * Time: 18:57
  */
 @JettaConfiguration("sur.snapps.jetta.metadata")
-public class MetaataConfiguration {
+public class MetaDataConfiguration {
 
     @JettaProperty(property = "output.directory", required = false, defaultValue = "target/output/metadata")
     private String directory;
