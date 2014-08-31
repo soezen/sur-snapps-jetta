@@ -21,7 +21,7 @@ import java.util.Calendar;
  */
 public class MetaDataModule extends JettaRuleModule {
 
-    private MetaDataConfiguration configuration = JettaConfigurations.get(MetaDataConfiguration.class);
+    private MetaataConfiguration configuration = JettaConfigurations.get(MetaataConfiguration.class);
     private UseCase useCase;
     private Scenario scenario;
     private boolean pending;
@@ -38,7 +38,7 @@ public class MetaDataModule extends JettaRuleModule {
         return instance;
     }
 
-    public MetaDataConfiguration configuration() {
+    public MetaataConfiguration configuration() {
         return configuration;
     }
 

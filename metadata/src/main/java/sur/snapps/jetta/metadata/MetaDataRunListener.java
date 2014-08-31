@@ -2,7 +2,7 @@ package sur.snapps.jetta.metadata;
 
 import org.junit.runner.Result;
 import org.junit.runner.notification.RunListener;
-import sur.snapps.jetta.metadata.module.MetaDataConfiguration;
+import sur.snapps.jetta.metadata.module.MetaataConfiguration;
 import sur.snapps.jetta.metadata.module.MetaDataModule;
 import sur.snapps.jetta.metadata.report.MetaDataReportFactory;
 import sur.snapps.jetta.metadata.xml.JettaMetaDataReport;
@@ -19,7 +19,7 @@ import java.io.File;
  */
 public class MetaDataRunListener extends RunListener {
 
-    private MetaDataConfiguration configuration = MetaDataModule.getInstance().configuration();
+    private MetaataConfiguration configuration = MetaDataModule.getInstance().configuration();
 
     @Override
     public void testRunFinished(Result result) throws Exception {
