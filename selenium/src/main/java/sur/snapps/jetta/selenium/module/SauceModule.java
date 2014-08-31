@@ -4,6 +4,8 @@ import com.saucelabs.common.SauceOnDemandSessionIdProvider;
 import com.saucelabs.common.Utils;
 import com.saucelabs.saucerest.SauceREST;
 import org.junit.runner.Description;
+import sur.snapps.jetta.core.config.JettaConfigurations;
+import sur.snapps.jetta.core.logger.JettaLogger;
 import sur.snapps.jetta.core.watchers.JettaWatcherModule;
 
 import java.util.HashMap;
@@ -16,11 +18,12 @@ import java.util.Map;
  */
 public class SauceModule extends JettaWatcherModule {
 
-    private SeleniumConfiguration configuration;
+    private SeleniumConfiguration configuration = JettaConfigurations.get(SeleniumConfiguration.class);
     private SauceREST sauceREST;
 
     public SauceModule() {
         if (configuration.sauceActivated()) {
+            JettaLogger.info(this.getClass(), "ACTIVATED");
             sauceREST = new SauceREST(configuration.sauceUsername(), configuration.sauceApiKey());
         }
     }
@@ -46,11 +49,7 @@ public class SauceModule extends JettaWatcherModule {
             Utils.addBuildNumberToUpdate(updates);
             sauceREST.updateJobInfo(sessionIdProvider.getSessionId(), updates);
 
-            if (configuration.logging()) {
-                // get, and print to StdOut, the link to the job
-                String authLink = sauceREST.getPublicJobLink(sessionIdProvider.getSessionId());
-                System.out.println("Job link: " + authLink);
-            }
+            JettaLogger.info(this.getClass(), "Job link: " + sauceREST.getPublicJobLink(sessionIdProvider.getSessionId()));
         }
     }
 }

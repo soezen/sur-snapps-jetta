@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:complexType abstract="true" name="itemWithDescription">
+        <xs:sequence>
+            <xs:element name="description" type="xs:string" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="scenario">
+        <xs:complexContent>
+            <xs:extension base="itemWithDescription">
+                <xs:sequence>
+                    <xs:element name="type" type="scenarioType" />
+                    <xs:element name="failureImpact" type="failureImpact" minOccurs="0" default="MEDIUM" />
+                    <xs:element name="executionTime" type="xs:dateTime" minOccurs="0" />
+                    <xs:element name="duration" type="xs:long" minOccurs="0" />
+                    <xs:element name="properties">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="properties" type="property" maxOccurs="unbounded" />
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="failureCause" minOccurs="0" type="xs:string" />
+                </xs:sequence>
+                <xs:attribute name="status" type="status" />
+            </xs:extension>
+        </xs:complexContent>
+
+    </xs:complexType>
+
+
+    <xs:complexType name="property">
+        <xs:attribute name="key" type="xs:string" use="required" />
+        <xs:attribute name="value" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:simpleType name="failureImpact">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="HIGH" />
+            <xs:enumeration value="MEDIUM" />
+            <xs:enumeration value="LOW" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="scenarioType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="SUCCESS" />
+            <xs:enumeration value="EXCEPTION" />
+            <xs:enumeration value="BUGFIX" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="status">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="SUCCESS" />
+            <xs:enumeration value="FAILURE" />
+            <xs:enumeration value="EXCEPTION" />
+            <xs:enumeration value="SKIPPED" />
+            <xs:enumeration value="PENDING" />
+            <xs:enumeration value="DEPRECATE" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="useCase">
+        <xs:complexContent>
+            <xs:extension base="itemWithDescription">
+                <xs:sequence>
+                    <xs:element name="scenarios" minOccurs="0">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="scenario" type="scenario" maxOccurs="unbounded" />
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="jettaMetaDataReport">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="useCase" type="useCase" maxOccurs="unbounded" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

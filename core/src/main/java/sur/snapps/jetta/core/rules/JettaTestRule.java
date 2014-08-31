@@ -1,8 +1,12 @@
 package sur.snapps.jetta.core.rules;
 
+import com.google.common.base.Stopwatch;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import sur.snapps.jetta.core.TestResult;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * User: SUR
@@ -15,10 +19,12 @@ public class JettaTestRule<M extends JettaRuleModule> implements TestRule {
 
     private Object target;
     private JettaRuleModule module;
+    private Stopwatch stopwatch;
 
     public JettaTestRule(Object target, M module) {
         this.target = target;
         this.module = module;
+        stopwatch = Stopwatch.createUnstarted();
     }
 
     @Override
@@ -26,13 +32,22 @@ public class JettaTestRule<M extends JettaRuleModule> implements TestRule {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                module.init(target, description.getMethodName());
-                boolean success = false;
+                boolean canRunTest = module.init(target, description);
+                TestResult result = TestResult.skippedResult();
+
                 try {
-                    base.evaluate();
-                    success = true;
+                    if (canRunTest) {
+                        stopwatch.start();
+                        base.evaluate();
+                        stopwatch.stop();
+                        result = TestResult.successResult(stopwatch.elapsed(TimeUnit.MILLISECONDS));
+                    }
+                } catch (Throwable throwable) {
+                    stopwatch.stop();
+                    result = TestResult.failureResult(throwable, stopwatch.elapsed(TimeUnit.MILLISECONDS));
+                    throw throwable;
                 } finally {
-                    module.quit(success);
+                    module.quit(result);
                 }
             }
         };

@@ -2,6 +2,7 @@ package sur.snapps.jetta.selenium.module;
 
 import com.google.common.io.Files;
 import org.apache.commons.lang.NotImplementedException;
+import org.junit.runner.Description;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
@@ -13,6 +14,9 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.unitils.util.ReflectionUtils;
+import sur.snapps.jetta.core.TestResult;
+import sur.snapps.jetta.core.config.JettaConfigurations;
+import sur.snapps.jetta.core.logger.JettaLogger;
 import sur.snapps.jetta.core.rules.JettaRuleModule;
 import sur.snapps.jetta.selenium.annotations.SeleniumTestCase;
 import sur.snapps.jetta.selenium.annotations.SeleniumWebDriver;
@@ -35,7 +39,6 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
@@ -46,22 +49,33 @@ import static com.google.common.base.Strings.isNullOrEmpty;
  */
 public class SeleniumModule extends JettaRuleModule {
 
-    private static final Logger LOGGER = Logger.getLogger("SeleniumModule");
-
-    private SeleniumConfiguration configuration;
+    private SeleniumConfiguration configuration = JettaConfigurations.get(SeleniumConfiguration.class);
     private WebDriver driver;
     private String testCase;
     private String testName;
 
-    public void init(Object target, String testName) {
-        this.testName = testName;
+    private static SeleniumModule instance;
+
+    private SeleniumModule() { }
+
+    public static SeleniumModule getInstance() {
+        if (instance == null) {
+            instance = new SeleniumModule();
+        }
+        return instance;
+    }
+
+    @Override
+    public boolean init(Object target, Description description) {
+        this.testName = description.getMethodName();
         if (isActive(target)) {
-            LOGGER.info("SeleniumModule ACTIVATED");
+            JettaLogger.info(this.getClass(), "ACTIVATED");
             createAndInjectWebDriver(target);
             createAndInjectWebPages(target);
 
             PageFactory.initElements(driver, target);
         }
+        return true;
     }
 
     private boolean isActive(Object target) {
@@ -76,11 +90,13 @@ public class SeleniumModule extends JettaRuleModule {
         return active;
     }
 
-    public void quit(boolean success) {
-        if (!success && configuration.takeScreenshotOnFailure()) {
+    @Override
+    public void quit(TestResult result) {
+        if (result.testFailed() && configuration.takeScreenshotOnFailure()) {
             File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
             try {
-                System.out.println(scrFile.getName());
+                JettaLogger.info(this.getClass(), "printscreen: " + scrFile.getName());
+
                 // TODO-TECH make this a property to be turned on and require a folder
                 // TODO rename source file with right extension
                 Files.move(scrFile, new File("tests/target/output/printscreens/" + scrFile.getName()));
@@ -114,8 +130,7 @@ public class SeleniumModule extends JettaRuleModule {
             if (field.isAnnotationPresent(SeleniumWebDriver.class)) {
                 if (field.getType().equals(WebDriver.class)) {
                     driver = createWebDriver();
-                    LOGGER.info("driver = " + driver);
-                    LOGGER.info("base url " + configuration.baseUrl());
+                    JettaLogger.debug(this.getClass(), "driver = " + driver);
                     ReflectionUtils.setFieldValue(target, field, driver);
                 }
             }
@@ -199,7 +214,7 @@ public class SeleniumModule extends JettaRuleModule {
         PageFactory.initElements(driver, webPage);
         createAndInjectWebPages(webPage);
         ReflectionUtils.setFieldValue(testObject, field, webPage);
-        LOGGER.info(testObject.getClass().getSimpleName() + "." + field.getName() + " = " + webPage);
+        JettaLogger.debug(this.getClass(), testObject.getClass().getSimpleName() + "." + field.getName() + " = " + webPage);
     }
 
     private void createAndInjectWebTable(Object testObject, Field field) {
@@ -209,7 +224,7 @@ public class SeleniumModule extends JettaRuleModule {
                 new Class[]{WebDriver.class, String.class},
                 new Object[]{driver, id});
         ReflectionUtils.setFieldValue(testObject, field, table);
-        LOGGER.info(testObject.getClass().getSimpleName() + "." + field.getName() + " = " + table);
+        JettaLogger.debug(this.getClass(), testObject.getClass().getSimpleName() + "." + field.getName() + " = " + table);
 
         Field columnIndicesField = ReflectionUtils.getFieldWithName(Table.class, "columns", false);
         Map<String, Column> columnIndices = ReflectionUtils.getFieldValue(table, columnIndicesField);
@@ -224,6 +239,6 @@ public class SeleniumModule extends JettaRuleModule {
                 new Class[]{WebDriver.class, EditField.class},
                 new Object[]{driver, editField });
         ReflectionUtils.setFieldValue(testObject, field, editInputElement);
-        LOGGER.info(testObject.getClass().getSimpleName() + "." + field.getName() + " = " + editInputElement);
+        JettaLogger.debug(this.getClass(), testObject.getClass().getSimpleName() + "." + field.getName() + " = " + editInputElement);
     }
 }

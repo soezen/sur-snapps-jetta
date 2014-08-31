@@ -33,6 +33,7 @@ public class ScriptRunnerTest {
         expect(statement.executeBatch()).andReturn(new int[0]);
         expect(connection.getAutoCommit()).andReturn(false);
         connection.commit();
+        connection.close();
         replay();
 
         ScriptRunner.executeScript(connection, "scripts/testExecuteScriptWithOneStatement.sql");
@@ -44,6 +45,7 @@ public class ScriptRunnerTest {
         statement.addBatch("delete from users");
         expect(statement.executeBatch()).andReturn(new int[0]);
         expect(connection.getAutoCommit()).andReturn(true);
+        connection.close();
         replay();
 
         ScriptRunner.executeScript(connection, "scripts/testExecuteScriptWithOneStatement.sql");
@@ -58,6 +60,7 @@ public class ScriptRunnerTest {
         expect(statement.executeBatch()).andReturn(new int[0]);
         expect(connection.getAutoCommit()).andReturn(false);
         connection.commit();
+        connection.close();
         replay();
 
         ScriptRunner.executeScript(connection, "scripts/testExecuteScriptWithMultipleStatements.sql");
@@ -70,6 +73,7 @@ public class ScriptRunnerTest {
         expect(statement.executeBatch()).andReturn(new int[0]);
         expect(connection.getAutoCommit()).andReturn(false);
         connection.commit();
+        connection.close();
         replay();
 
         ScriptRunner.executeScript(connection, "scripts/testExecuteScriptWithOneMultiLineStatement.sql");
@@ -84,6 +88,7 @@ public class ScriptRunnerTest {
         expect(statement.executeBatch()).andReturn(new int[0]);
         expect(connection.getAutoCommit()).andReturn(false);
         connection.commit();
+        connection.close();
         replay();
 
         ScriptRunner.executeScript(connection, "scripts/testExecuteScriptWithMultipleMultiLineStatements.sql");

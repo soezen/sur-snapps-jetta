@@ -1,6 +1,10 @@
 package sur.snapps.jetta.database.module;
 
+import org.junit.runner.Description;
 import org.unitils.util.ReflectionUtils;
+import sur.snapps.jetta.core.TestResult;
+import sur.snapps.jetta.core.config.JettaConfigurations;
+import sur.snapps.jetta.core.logger.JettaLogger;
 import sur.snapps.jetta.core.rules.JettaRuleModule;
 import sur.snapps.jetta.database.counter.RecordCounter;
 import sur.snapps.jetta.database.script.Script;
@@ -19,20 +23,33 @@ import java.util.Set;
  */
 public class DatabaseModule extends JettaRuleModule {
 
-    private DatabaseConfiguration configuration;
+    private DatabaseConfiguration configuration = JettaConfigurations.get(DatabaseConfiguration.class);
     private Connection connection;
 
+    private static DatabaseModule instance;
+
+    private DatabaseModule() { }
+
+    public static DatabaseModule getInstance() {
+        if (instance == null) {
+            instance = new DatabaseModule();
+        }
+        return instance;
+    }
+
     @Override
-    public void init(Object target, String testName) {
+    public boolean init(Object target, Description description) {
+        JettaLogger.info(this.getClass(), "ACTIVATED");
         executeTestScript(target);
         injectRecordCounter(target);
+        return true;
     }
 
     private void injectRecordCounter(Object target) {
         Set<Field> fields = ReflectionUtils.getAllFields(target.getClass());
         for (Field field : fields) {
             if (field.getType().equals(RecordCounter.class)) {
-                ReflectionUtils.setFieldValue(target, field, new RecordCounter(connection, configuration.databaseDialect()));
+                ReflectionUtils.setFieldValue(target, field, new RecordCounter(getConnection(), configuration.databaseDialect()));
             }
         }
     }
@@ -45,7 +62,7 @@ public class DatabaseModule extends JettaRuleModule {
     }
 
     @Override
-    public void quit(boolean success) {
+    public void quit(TestResult result) {
         try {
             connection.close();
         } catch (SQLException ignored) {
@@ -54,9 +71,7 @@ public class DatabaseModule extends JettaRuleModule {
 
 
     private Connection getConnection() {
-        if (connection == null) {
-            initializeConnection();
-        }
+        initializeConnection();
         return connection;
     }
 

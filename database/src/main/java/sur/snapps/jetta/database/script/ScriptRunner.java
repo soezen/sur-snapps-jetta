@@ -2,6 +2,7 @@ package sur.snapps.jetta.database.script;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.LineReader;
+import sur.snapps.jetta.core.logger.JettaLogger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,7 +11,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * User: SUR
@@ -18,8 +18,6 @@ import java.util.logging.Logger;
  * Time: 20:32
  */
 public class ScriptRunner {
-
-    private static final Logger LOGGER = Logger.getLogger("ScriptRunner");
 
     // TODO transactions?
     public static void executeScript(Connection connection, String scriptLocation) {
@@ -36,8 +34,16 @@ public class ScriptRunner {
             }
         } catch (SQLException e) {
             throw new IllegalArgumentException(e);
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
+
+    // TODO-BUG last scenario is added to wrong use case
 
     private static List<String> getSqlStatements(String scriptLocation) {
         List<String> statements = Lists.newLinkedList();
@@ -58,7 +64,7 @@ public class ScriptRunner {
                     String statement = lineBuilder.toString();
                     statement = statement.replaceAll(";", "").trim();
                     statements.add(statement);
-                    LOGGER.info("SQL: " + statement);
+                    JettaLogger.debug(ScriptRunner.class, "SQL : " + statement);
                     lineBuilder = new StringBuilder();
                 }
             }

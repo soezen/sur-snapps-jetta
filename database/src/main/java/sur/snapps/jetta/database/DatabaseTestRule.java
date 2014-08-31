@@ -11,6 +11,6 @@ import sur.snapps.jetta.database.module.DatabaseModule;
 public class DatabaseTestRule extends JettaTestRule<DatabaseModule> {
 
     public DatabaseTestRule(Object target) {
-        super(target, new DatabaseModule());
+        super(target, DatabaseModule.getInstance());
     }
 }

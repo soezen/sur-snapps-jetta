@@ -37,11 +37,30 @@ public class EditInputElement {
         getSubmitButton().click();
     }
 
+    public void edit(String[][] inputValues) {
+        getEditButton().click();
+
+        for (String[] value : inputValues) {
+            WebElement editField = getEditField(value[0]);
+            editField.clear();
+            editField.sendKeys(value[1]);
+        }
+
+        getSubmitButton().click();
+    }
+
     public WebElement getSingleEditField() {
         if (editFields.size() != 1) {
             throw new IllegalStateException("cannot ask single edit field if more than one edit field is present");
         }
         return driver.findElement(By.id(editFields.get(0)));
+    }
+
+    public WebElement getEditField(String id) {
+        if (!editFields.contains(id)) {
+            throw new IllegalArgumentException("edit field not configured for this edit group");
+        }
+        return driver.findElement(By.id(id));
     }
 
     // TODO confirm that input is visible
@@ -53,6 +72,8 @@ public class EditInputElement {
     public WebElement getEditButton() {
         return driver.findElement(By.xpath(selectReadOnlyFormGroup() + "//a[contains(@onclick,'sur.edit')]"));
     }
+
+    // TODO make module tests for functional tests
 
     public WebElement getSubmitButton() {
         return driver.findElement(By.xpath(selectEditFormGroup() + "//a[contains(@onclick, 'sur.submit')]"));

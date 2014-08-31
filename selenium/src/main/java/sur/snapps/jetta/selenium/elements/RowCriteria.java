@@ -9,6 +9,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
+import sur.snapps.jetta.core.logger.JettaLogger;
 
 import javax.annotation.Nullable;
 import java.util.Iterator;
@@ -87,7 +88,7 @@ public class RowCriteria {
             });
         } catch (TimeoutException timeoutException) {
             // TODO only do this if logging is turned on
-            System.out.println("NO SUCH ELEMENT: " + xpathExpression);
+            JettaLogger.debug(this.getClass(), "NO SUCH ELEMENT: " + xpathExpression);
         }
         return null;
     }
