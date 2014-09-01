@@ -48,7 +48,7 @@ public class MetaDataModule extends JettaRuleModule {
         pending = false;
         deprecate = false;
 
-        this.useCase = getUseCase(target);
+        useCase = getUseCase(target);
 
         if (useCase != null) {
             scenario = initializeScenario(description);
@@ -103,7 +103,7 @@ public class MetaDataModule extends JettaRuleModule {
         sur.snapps.jetta.metadata.annotations.Scenario scenarioAnnotation = description.getAnnotation(sur.snapps.jetta.metadata.annotations.Scenario.class);
         if (scenarioAnnotation != null) {
             xmlScenario = MetaDataReportFactory.createScenario(description.getMethodName(), null, scenarioAnnotation.type(), scenarioAnnotation.failureImpact());
-            useCase.getScenarios().add(scenario);
+            useCase.getScenarios().add(xmlScenario);
 
             if (description.getAnnotation(Pending.class) != null) {
                 pending = true;

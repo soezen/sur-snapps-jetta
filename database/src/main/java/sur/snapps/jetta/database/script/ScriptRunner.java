@@ -43,8 +43,6 @@ public class ScriptRunner {
         }
     }
 
-    // TODO-BUG last scenario is added to wrong use case
-
     private static List<String> getSqlStatements(String scriptLocation) {
         List<String> statements = Lists.newLinkedList();
 
