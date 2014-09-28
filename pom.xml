@@ -24,7 +24,7 @@
     <scm>
         <url>https://github.com/soezen/sur-snapps-jetta.git</url>
         <developerConnection>scm:git:https://github.com/soezen/sur-snapps-jetta.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>refs/head/master</tag>
     </scm>
 
     <build>
