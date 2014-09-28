@@ -39,25 +39,14 @@
                 </configuration>
             </plugin>
         </plugins>
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-webdav-jackrabbit</artifactId>
-                <version>2.6</version>
-            </extension>
-        </extensions>
     </build>
 
-    <scm>
-        <url>https://git.cloudbees.com/snapps/unitils.git</url>
-        <developerConnection>scm:git:ssh://git@git.cloudbees.com/snapps/unitils.git</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
 
     <distributionManagement>
         <repository>
-            <id>snapps-release-repository</id>
-            <url>https://repository-snapps.forge.cloudbees.com/release/</url>
+            <id>internal.repo</id>
+            <name>Temporary Staging Repository</name>
+            <url>file://${project.build.directory}/mvn-repo</url>
         </repository>
     </distributionManagement>
 </project>
