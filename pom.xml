@@ -21,6 +21,12 @@
         <github.global.server>github</github.global.server>
     </properties>
 
+    <scm>
+        <url>https://github.com/soezen/sur-snapps-jetta.git</url>
+        <developerConnection>scm:git:https://github.com/soezen/sur-snapps-jetta.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
     <build>
         <plugins>
             <plugin>
@@ -58,7 +64,6 @@
                     <includes><include>**/*</include></includes>
                     <repositoryName>sur-snapps-jetta</repositoryName>      <!-- github repo name -->
                     <repositoryOwner>soezen</repositoryOwner>    <!-- github username  -->
-                   <userName>soezen</userName>
                 </configuration>
                 <executions>
                     <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
