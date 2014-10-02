@@ -22,10 +22,9 @@
     </properties>
 
     <scm>
-        <url>https://github.com/soezen/sur-snapps-jetta.git</url>
-        <connection>scm:git:ssh://git@github.com/soezen/sur-snapps-jetta.git</connection>
-        <developerConnection>scm:git:https://git@github.com/soezen/sur-snapps-jetta.git</developerConnection>
-        <tag>HEAD</tag>
+        <connection>scm:git:git@github.com:soezen/sur-snapps-jetta.git</connection>
+        <url>scm:git:git@github.com:soezen/sur-snapps-jetta.git</url>
+        <developerConnection>scm:git:git@github.com:soezen/sur-snapps-jetta.git</developerConnection>
     </scm>
 
     <build>
