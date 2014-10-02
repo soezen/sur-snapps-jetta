@@ -22,8 +22,8 @@
     </properties>
 
     <scm>
-        <url>http://github.com/soezen/sur-snapps-jetta</url>
-        <connection>scm:git:https://git@github.com/soezen/sur-snapps-jetta.git</connection>
+        <url>https://github.com/soezen/sur-snapps-jetta.git</url>
+        <connection>scm:git:ssh://git@github.com/soezen/sur-snapps-jetta.git</connection>
         <developerConnection>scm:git:https://git@github.com/soezen/sur-snapps-jetta.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
@@ -86,7 +86,6 @@
             </plugin>
         </plugins>
     </build>
-
 
     <distributionManagement>
         <repository>
