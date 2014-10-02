@@ -5,7 +5,7 @@
     <groupId>sur.snapps.jetta</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.3</version>
+    <version>0.0.3-SNAPSHOT</version>
     <modules>
         <module>core</module>
         <module>database</module>
@@ -25,8 +25,7 @@
         <connection>scm:git:git@github.com:soezen/sur-snapps-jetta.git</connection>
         <url>scm:git:git@github.com:soezen/sur-snapps-jetta.git</url>
         <developerConnection>scm:git:git@github.com:soezen/sur-snapps-jetta.git</developerConnection>
-      <tag>v0.0.3-c</tag>
-  </scm>
+    </scm>
 
     <build>
         <plugins>
