@@ -40,4 +40,12 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>internal.repo</id>
+            <name>Temporary Staging Repository</name>
+            <url>file://C:\.m2\repository</url>
+        </repository>
+    </distributionManagement>
 </project>
