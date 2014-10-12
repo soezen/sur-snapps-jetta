@@ -16,5 +16,6 @@ public @interface JettaConfiguration {
 
     // TODO create annotation to specify constraints between jetta-properties?
 
+
     String value();
 }
