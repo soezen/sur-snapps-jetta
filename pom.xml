@@ -14,6 +14,7 @@
     </modules>
 
     <properties>
+        <sourceEncoding>UTF-8</sourceEncoding>
         <junit-version>4.11</junit-version>
         <unitils-version>3.4</unitils-version>
         <guava-version>17.0</guava-version>
