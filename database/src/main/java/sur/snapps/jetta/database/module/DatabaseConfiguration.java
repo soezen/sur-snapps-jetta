@@ -16,6 +16,8 @@ public class DatabaseConfiguration {
     private String scriptLocation;
     @JettaProperty(property = "script.clear", required = false)
     private String clearScript;
+    @JettaProperty(property = "script.create", required = false)
+    private String createScript;
     @JettaProperty(property = "dialect", required = true)
     private DatabaseDialect dialect;
     @JettaProperty(property = "datasource.driver", required = true)
@@ -24,7 +26,7 @@ public class DatabaseConfiguration {
     private String dataSourceUrl;
     @JettaProperty(property = "datasource.username", required = true)
     private String dataSourceUsername;
-    @JettaProperty(property = "datasource.password", required = true)
+    @JettaProperty(property = "datasource.password", required = false, defaultValue = "")
     private String dataSourcePassword;
 
 
@@ -42,6 +44,10 @@ public class DatabaseConfiguration {
 
     public String clearScript() {
         return clearScript;
+    }
+
+    public String createScript() {
+        return createScript;
     }
 
     public class DataSource {

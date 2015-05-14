@@ -9,7 +9,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import sur.snapps.jetta.database.dummy.annotations.Calculated;
 import sur.snapps.jetta.database.dummy.annotations.Dummy;
-import sur.snapps.jetta.database.dummy.expression.DateExpression;
+import sur.snapps.jetta.core.el.expression.DateExpression;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;

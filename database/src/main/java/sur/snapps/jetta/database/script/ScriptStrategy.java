@@ -6,5 +6,6 @@ package sur.snapps.jetta.database.script;
  * Time: 15:46
  */
 public enum ScriptStrategy {
-    CLEAN_FIRST
+    CLEAN_FIRST,
+    CREATE_FIRST
 }

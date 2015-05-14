@@ -25,7 +25,7 @@ public class SelectClauseTest {
         
         SelectClause result = new SelectClause(table);
         
-        assertEquals("SELECT count(a.pk) as count", result.get(DatabaseDialect.MYSQL));
+        assertEquals("SELECT count(a.pk) as C", result.get(DatabaseDialect.MYSQL));
     }
     
     @Test
@@ -35,7 +35,7 @@ public class SelectClauseTest {
         
         SelectClause result = new SelectClause(table);
         
-        assertEquals("SELECT count(*) as count", result.get(DatabaseDialect.MYSQL));
+        assertEquals("SELECT count(*) as C", result.get(DatabaseDialect.MYSQL));
     }
     
 }

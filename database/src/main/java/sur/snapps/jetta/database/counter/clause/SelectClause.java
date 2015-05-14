@@ -16,7 +16,7 @@ public class SelectClause implements Clause {
     public String get(DatabaseDialect dialect) {
         return new StringBuilder("SELECT count(")
             .append(table.alias() == null ? "*" : (table.alias() + "." + table.primaryKey()))
-            .append(") as count")
+            .append(") as C")
             .toString();
     }
 }

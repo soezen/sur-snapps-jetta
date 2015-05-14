@@ -38,9 +38,10 @@ public class CountStatementTest {
         expect(table.nameWithJoins()).andReturn("name");
         expect(expression.expression(DatabaseDialect.MYSQL)).andReturn("expr");
         expect(connection.createStatement()).andReturn(statement);
-        expect(statement.executeQuery("SELECT count(a.id) as count FROM name WHERE expr")).andReturn(resultSet);
+        expect(statement.executeQuery("SELECT count(a.id) as C FROM name WHERE expr")).andReturn(resultSet);
         expect(resultSet.next()).andReturn(true);
-        expect(resultSet.getInt("count")).andReturn(1);
+        expect(resultSet.getInt("C")).andReturn(1);
+        connection.close();
         replay();
         
         CountStatement countStatement = new CountStatement(connection, DatabaseDialect.MYSQL);
@@ -57,9 +58,10 @@ public class CountStatementTest {
         expect(table.primaryKey()).andReturn("id");
         expect(table.nameWithJoins()).andReturn("name");
         expect(connection.createStatement()).andReturn(statement);
-        expect(statement.executeQuery("SELECT count(a.id) as count FROM name")).andReturn(resultSet);
+        expect(statement.executeQuery("SELECT count(a.id) as C FROM name")).andReturn(resultSet);
         expect(resultSet.next()).andReturn(true);
-        expect(resultSet.getInt("count")).andReturn(1);
+        expect(resultSet.getInt("C")).andReturn(1);
+        connection.close();
         replay();
         
         CountStatement countStatement = new CountStatement(connection, DatabaseDialect.MYSQL);
@@ -73,9 +75,10 @@ public class CountStatementTest {
     public void testGetWithoutAlias() throws SQLException {
         expect(expression.expression(DatabaseDialect.MYSQL)).andReturn("expr");
         expect(connection.createStatement()).andReturn(statement);
-        expect(statement.executeQuery("SELECT count(*) as count FROM table WHERE expr")).andReturn(resultSet);
+        expect(statement.executeQuery("SELECT count(*) as C FROM table WHERE expr")).andReturn(resultSet);
         expect(resultSet.next()).andReturn(true);
-        expect(resultSet.getInt("count")).andReturn(1);
+        expect(resultSet.getInt("C")).andReturn(1);
+        connection.close();
         replay();
         
         CountStatement countStatement = new CountStatement(connection, DatabaseDialect.MYSQL);

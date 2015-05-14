@@ -45,6 +45,7 @@ public class ScriptRunner {
 
     private static List<String> getSqlStatements(String scriptLocation) {
         List<String> statements = Lists.newLinkedList();
+        JettaLogger.info(ScriptRunner.class, "Loading script : " + scriptLocation);
 
         InputStream inputStream = ClassLoader.getSystemResourceAsStream(scriptLocation);
         if (inputStream == null) {

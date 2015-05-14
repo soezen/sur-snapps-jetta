@@ -8,5 +8,6 @@ package sur.snapps.jetta.database;
 public enum DatabaseDialect {
 
     ORACLE,
-    MYSQL
+    MYSQL,
+    HSQLDB
 }

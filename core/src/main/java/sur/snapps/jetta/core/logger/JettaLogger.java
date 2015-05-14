@@ -10,6 +10,12 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 /**
+ * Activate logging for a specific module by adding this to config
+ * sur.snapps.jetta.logging.module_name=LEVEL
+ *
+ * Default logging level for all modules:
+ * sur.snapps.jetta.logging.default=LEVEL
+ *
  * User: SUR
  * Date: 26/08/14
  * Time: 19:02

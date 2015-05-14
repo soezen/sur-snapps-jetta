@@ -47,10 +47,16 @@ public class CountStatement {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
-                return rs.getInt("count");
+                return rs.getInt("C");
             }
         } catch (SQLException e) {
             throw new IllegalArgumentException("sql error: " + sql, e);
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         throw new IllegalArgumentException("invalid sql: " + sql);
     }
