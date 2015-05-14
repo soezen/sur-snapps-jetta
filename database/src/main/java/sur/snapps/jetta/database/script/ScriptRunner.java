@@ -2,6 +2,8 @@ package sur.snapps.jetta.database.script;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.LineReader;
+import sur.snapps.jetta.core.exception.ErrorType;
+import sur.snapps.jetta.core.exception.JettaException;
 import sur.snapps.jetta.core.logger.JettaLogger;
 
 import java.io.IOException;
@@ -33,7 +35,7 @@ public class ScriptRunner {
                 connection.commit();
             }
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new JettaException(ErrorType.UNEXPECTED, e);
         } finally {
             try {
                 connection.close();
@@ -58,13 +60,15 @@ public class ScriptRunner {
         try {
             String line;
             while ((line = lineReader.readLine()) != null) {
-                lineBuilder.append(" ").append(line.trim());
-                if (line.endsWith(";")) {
-                    String statement = lineBuilder.toString();
-                    statement = statement.replaceAll(";", "").trim();
-                    statements.add(statement);
-                    JettaLogger.debug(ScriptRunner.class, "SQL : " + statement);
-                    lineBuilder = new StringBuilder();
+                if (!line.startsWith("--")) {
+                    lineBuilder.append(" ").append(line.trim());
+                    if (line.endsWith(";")) {
+                        String statement = lineBuilder.toString();
+                        statement = statement.replaceAll(";", "").trim();
+                        statements.add(statement);
+                        JettaLogger.debug(ScriptRunner.class, "SQL : " + statement);
+                        lineBuilder = new StringBuilder();
+                    }
                 }
             }
         } catch (IOException e) {

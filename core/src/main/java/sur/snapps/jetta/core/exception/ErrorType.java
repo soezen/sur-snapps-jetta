@@ -6,5 +6,6 @@ package sur.snapps.jetta.core.exception;
  */
 public enum ErrorType {
 
-    MISSING_PROPERTY
+    MISSING_PROPERTY,
+    UNEXPECTED
 }

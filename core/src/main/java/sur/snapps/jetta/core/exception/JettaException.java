@@ -17,4 +17,10 @@ public class JettaException extends RuntimeException {
         this.type = type;
         this.params = ImmutableList.copyOf(params);
     }
+
+    public JettaException(ErrorType type, Exception cause) {
+        super(cause);
+        this.type = type;
+        this.params = ImmutableList.of();
+    }
 }
