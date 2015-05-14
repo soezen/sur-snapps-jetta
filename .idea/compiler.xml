@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <option name="DEFAULT_COMPILER" value="Javac" />
+    <resourceExtensions />
+    <wildcardResourcePatterns>
+      <entry name="!?*.java" />
+      <entry name="!?*.form" />
+      <entry name="!?*.class" />
+      <entry name="!?*.groovy" />
+      <entry name="!?*.scala" />
+      <entry name="!?*.flex" />
+      <entry name="!?*.kt" />
+      <entry name="!?*.clj" />
+    </wildcardResourcePatterns>
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="data" />
+        <module name="dummy" />
+        <module name="jetta-core" />
+        <module name="jetta-data" />
+        <module name="jetta-database" />
+        <module name="jetta-dummy" />
+        <module name="jetta-metadata" />
+        <module name="jetta-selenium" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="data" target="1.7" />
+      <module name="dummy" target="1.7" />
+      <module name="jetta-core" target="1.7" />
+      <module name="jetta-data" target="1.7" />
+      <module name="jetta-database" target="1.7" />
+      <module name="jetta-dummy" target="1.7" />
+      <module name="jetta-metadata" target="1.7" />
+      <module name="jetta-selenium" target="1.7" />
+      <module name="parent" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

@@ -1,0 +1,47 @@
+<data>
+    <families>
+        <record>
+            <id>SIMPSONS</id>
+            <name>Simpson</name>
+        </record>
+    </families>
+    <persons>
+        <record transient="true">
+            <id>GRANDPA</id>
+        </record>
+        <record>
+            <id>HOMER_SIMPSON</id>
+            <first_name>Homer</first_name>
+            <last_name>Simpson</last_name>
+            <family id="SIMPSONS" />
+            <list of="emails">
+                <email>homer.simpson@springfield.com</email>
+                <email>homer.simpson@tv.com</email>
+            </list>
+        </record>
+        <record>
+            <id>MARGE_BOUVIER</id>
+            <first_name>Marge</first_name>
+            <last_name>Bouvier</last_name>
+            <family id="SIMPSONS" />
+        </record>
+        <record>
+            <id>BART_SIMPSON</id>
+            <first_name>Bart</first_name>
+            <last_name>Simpson</last_name>
+            <family id="SIMPSONS" />
+        </record>
+        <record>
+            <id>LISA_SIMPSON</id>
+            <first_name>Lisa</first_name>
+            <last_name>Simpson</last_name>
+            <family id="SIMPSONS" />
+        </record>
+        <record>
+            <id>MAGGIE_SIMPSON</id>
+            <first_name>Maggie</first_name>
+            <last_name>Simpson</last_name>
+            <family id="SIMPSONS" />
+        </record>
+    </persons>
+</data>
