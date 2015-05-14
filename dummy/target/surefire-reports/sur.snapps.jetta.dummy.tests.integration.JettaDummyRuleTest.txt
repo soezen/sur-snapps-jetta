@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: sur.snapps.jetta.dummy.tests.integration.JettaDummyRuleTest
--------------------------------------------------------------------------------
-Tests run: 15, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.22 sec
